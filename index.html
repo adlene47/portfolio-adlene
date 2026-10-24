@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0a0b;--fg:#f2efe9;--mut:#8b8882;--line:#26262a;--card:#131315;--acc:#ff4b1f;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--hero-img:none;--hero-img-opacity:1;--hero-overlay:.5;--title-opacity:1;--lead-opacity:.9;--bg:#0a0a0b;--fg:#f2efe9;--mut:#8b8882;--line:#26262a;--card:#131315;--acc:#ff4b1f;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:'Inter Tight',system-ui,sans-serif;line-height:1.5;overflow-x:hidden}
@@ -28,7 +28,7 @@ nav ul a{font-size:14px;color:var(--mut);transition:color .2s}nav ul a:hover{col
 /* hero */
 .hero{position:relative;min-height:calc(100vh - 60px);display:flex;flex-direction:column;justify-content:space-between;padding:32px 0 28px;overflow:hidden;background:radial-gradient(60% 50% at 70% 30%,rgba(255,75,31,.22),transparent 70%),radial-gradient(50% 50% at 15% 80%,rgba(70,90,200,.18),transparent 70%)}
 .hero .top,.hero .bot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.big{font-size:clamp(72px,19vw,300px);font-weight:800;letter-spacing:-.06em;line-height:.82;margin:0;text-transform:uppercase}
+.hero::before{content:"";position:absolute;inset:0;background:var(--hero-img) center/cover no-repeat;opacity:var(--hero-img-opacity);z-index:0}.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,11,var(--hero-overlay)),var(--bg));z-index:1;pointer-events:none}.hero>*{position:relative;z-index:2}.big{opacity:var(--title-opacity)}.hero p.lead{opacity:var(--lead-opacity)}.big{font-size:clamp(72px,19vw,300px);font-weight:800;letter-spacing:-.06em;line-height:.82;margin:0;text-transform:uppercase}
 .big span{color:var(--acc)}
 .hero p.lead{max-width:520px;font-size:clamp(17px,1.6vw,21px);margin:24px 0 0}
 .tl{height:28px;margin-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;padding-top:6px;background:repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 24px) top/100% 8px no-repeat}
@@ -48,7 +48,7 @@ h2{font-size:clamp(34px,6vw,84px);letter-spacing:-.045em;line-height:.95;margin:
 .g169{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
 .tile{position:relative;overflow:hidden;border-radius:14px;border:1px solid var(--line);background:var(--card);transition:transform .4s,border-color .3s}
 .tile:hover{transform:translateY(-4px);border-color:var(--acc)}
-.tile{display:block}.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.tile .mt,.tile .tc{text-shadow:0 1px 6px rgba(0,0,0,.7);z-index:1}.tile .pl{z-index:1}.soc{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px}.r916{aspect-ratio:9/16}.r169{aspect-ratio:16/9}
+.tile{display:block}.tile.on{cursor:default}.tile.on:hover{transform:none;border-color:var(--line)}.tile.on::before{display:none}.tile iframe,.tile video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000;z-index:3}.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.tile .mt,.tile .tc{text-shadow:0 1px 6px rgba(0,0,0,.7);z-index:1}.tile .pl{z-index:1}.soc{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px}.r916{aspect-ratio:9/16}.r169{aspect-ratio:16/9}
 .tile::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,hsl(var(--h) 60% 22%),#0d0d10 70%);opacity:.9}
 .tile .pl{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:54px;height:54px;border:1px solid rgba(255,255,255,.4);border-radius:50%;display:grid;place-items:center;backdrop-filter:blur(6px);transition:.3s}
 .tile:hover .pl{background:var(--acc);border-color:var(--acc);transform:translate(-50%,-50%) scale(1.12)}
@@ -163,7 +163,12 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 <script>
 /* ====== A MODIFIER : tes liens, ton logo, tes vidéos ====== */
 var C={
-  email:"",                 // ex: "adlanepro47@gmail.com"
+  heroImage:"",            // image d'accueil, ex: "images/accueil.jpg" (vide = fond dégradé)
+  heroImageOpacity:1,       // 0 à 1 : visibilité de l'image
+  heroOverlay:0.5,          // 0 à 1 : voile sombre sur l'image (plus haut = image plus sombre)
+  titleOpacity:1,           // 0 à 1 : opacité du grand titre « ADLENE. »
+  textOpacity:0.9,          // 0 à 1 : opacité du texte de présentation
+  email:"",                 // ex: "adlene@gmail.com"
   logo:"",                  // ex: "images/logo.png" (laisse vide pour garder le texte « Adlene. »)
   socials:[                 // ["Nom du bouton","lien"] — les liens vides sont ignorés
     ["Instagram",""],
@@ -173,7 +178,7 @@ var C={
   // Pour chaque vidéo : url = lien YouTube/Instagram, thumb = image de couverture (facultatif)
   // Pour une vidéo YouTube, la miniature est récupérée automatiquement si thumb est vide.
   reels:[
-    {title:"Reel 1",url:"https://youtu.be/UVP92hkTPMA",thumb:""},{title:"Reel 2",url:"",thumb:""},{title:"Reel 3",url:"",thumb:""},
+    {title:"Reel 1",url:"",thumb:""},{title:"Reel 2",url:"",thumb:""},{title:"Reel 3",url:"",thumb:""},
     {title:"Reel 4",url:"",thumb:""},{title:"Reel 5",url:"",thumb:""}
   ],
   youtube:[
@@ -187,12 +192,22 @@ var C={
 function yt(u){var m=(u||"").match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/);return m?"https://img.youtube.com/vi/"+m[1]+"/hqdefault.jpg":""}
 function esc(x){return String(x).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function mk(id,list,cls,label,hue){var h='';list.forEach(function(v,i){var th=v.thumb||yt(v.url);
-h+='<a class="tile '+cls+'" style="--h:'+((i*47+hue)%360)+'" href="'+(v.url?esc(v.url):'#work')+'"'+(v.url?' target="_blank" rel="noopener"':'')+'>'+(th?'<img src="'+esc(th)+'" alt="'+esc(v.title||label)+'" loading="lazy">':'')+'<span class="tc mono">0'+(i+1)+'</span><span class="pl"></span><div class="mt mono"><span>'+esc(v.title||label)+'</span></div></a>'});
+h+='<a class="tile '+cls+'" style="--h:'+((i*47+hue)%360)+'" data-url="'+esc(v.url||'')+'" href="'+(v.url?esc(v.url):'#work')+'"'+(v.url?' target="_blank" rel="noopener"':'')+'>'+(th?'<img src="'+esc(th)+'" alt="'+esc(v.title||label)+'" loading="lazy">':'')+'<span class="tc mono">0'+(i+1)+'</span><span class="pl"></span><div class="mt mono"><span>'+esc(v.title||label)+'</span></div></a>'});
 document.getElementById(id).innerHTML=h}
 mk('g1',C.reels,'r916','Reel',10);mk('g2',C.youtube,'r169','YouTube',200);mk('g3',C.motion,'r169','Motion',280);
+var rs=document.documentElement.style;if(C.heroImage)rs.setProperty('--hero-img','url("'+C.heroImage+'")');rs.setProperty('--hero-img-opacity',C.heroImageOpacity);rs.setProperty('--hero-overlay',C.heroOverlay);rs.setProperty('--title-opacity',C.titleOpacity);rs.setProperty('--lead-opacity',C.textOpacity);
 if(C.email)document.getElementById('mail').href='mailto:'+C.email+'?subject=Projet%20vid%C3%A9o';
 if(C.logo)document.getElementById('logo').innerHTML='<img src="'+esc(C.logo)+'" alt="Adlene" style="height:30px;display:block">';
 document.getElementById('soc').innerHTML=C.socials.filter(function(x){return x[1]}).map(function(x){return '<a class="btn" target="_blank" rel="noopener" href="'+esc(x[1])+'">'+esc(x[0])+' ↗</a>'}).join('');
+function emb(u){var m;if(!u)return null;
+if(m=u.match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/))return{t:'i',s:'https://www.youtube.com/embed/'+m[1]+'?autoplay=1&rel=0&playsinline=1'};
+if(m=u.match(/instagram\.com\/(reel|reels|p)\/([\w-]+)/))return{t:'i',s:'https://www.instagram.com/'+(m[1]=='p'?'p':'reel')+'/'+m[2]+'/embed'};
+if(m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/))return{t:'i',s:'https://player.vimeo.com/video/'+m[1]+'?autoplay=1'};
+if(m=u.match(/tiktok\.com\/.*\/video\/(\d+)/))return{t:'i',s:'https://www.tiktok.com/embed/v2/'+m[1]};
+if(/\.(mp4|webm|mov|m4v)(\?|$)/i.test(u))return{t:'v',s:u};return null}
+document.addEventListener('click',function(e){var a=e.target.closest('.tile');if(!a||a.classList.contains('on'))return;var em=emb(a.getAttribute('data-url'));if(!em)return;e.preventDefault();
+document.querySelectorAll('.tile.on').forEach(function(o){o.innerHTML=o._h;o.classList.remove('on');if(o._href){o.setAttribute('href',o._href);o.setAttribute('target','_blank')}});a._h=a.innerHTML;a._href=a.getAttribute('href');a.classList.add('on');a.removeAttribute('href');a.removeAttribute('target');
+a.innerHTML=em.t=='v'?'<video src="'+esc(em.s)+'" controls autoplay playsinline></video>':'<iframe src="'+esc(em.s)+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>'});
 var t0=Date.now(),el=document.getElementById('tc');
 setInterval(function(){var s=(Date.now()-t0)/1000,f=Math.floor((s%1)*24),p=function(x){return String(x).padStart(2,'0')};el.textContent=p(Math.floor(s/3600))+':'+p(Math.floor(s/60)%60)+':'+p(Math.floor(s)%60)+':'+p(f)},41);
 var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.12});
