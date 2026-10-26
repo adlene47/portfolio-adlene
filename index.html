@@ -80,6 +80,29 @@ h2{font-size:clamp(34px,6vw,84px);letter-spacing:-.045em;line-height:.95;margin:
 .tile .mt{position:absolute;left:14px;right:14px;bottom:12px;display:flex;justify-content:space-between;font-size:11px}
 .tile .mt,.tile .tc{color:rgba(255,255,255,.7)}
 .tile .tc{position:absolute;left:14px;top:12px;font-size:11px}
+/* animations vidéos YouTube */
+.pv{opacity:0;pointer-events:none}
+.tile.act .pv{animation:pv 6s ease-in-out infinite}
+@keyframes pv{0%{opacity:0;transform:scale(1)}10%{opacity:1}33%{opacity:1}43%{opacity:0;transform:scale(1.12)}100%{opacity:0;transform:scale(1.12)}}
+.tile .gl{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.28),transparent 55%)}
+.tile.tilt:hover .gl{opacity:1}
+.tile.tilt,.tile.tilt:hover{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px))}
+.tile.tilt:hover{--ty:-4px}
+.tile .r2{position:absolute;right:14px;top:12px;z-index:1;display:flex;align-items:center;gap:7px;font:11px 'JetBrains Mono',monospace;color:rgba(255,255,255,.85);text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.tile .bar{position:absolute;left:0;right:0;bottom:0;height:3px;z-index:1;background:rgba(255,255,255,.16)}
+.tile .bar b{display:block;height:100%;width:0;background:var(--acc);animation:pg 7s linear infinite}
+@keyframes pg{to{width:100%}}
+.tile.cas{opacity:0;translate:0 44px;scale:.95;transition:opacity .9s,translate .9s cubic-bezier(.22,.8,.2,1),scale .9s cubic-bezier(.22,.8,.2,1),transform .25s,border-color .3s}
+.tile.cas.in{opacity:1;translate:0 0;scale:1}
+@media(prefers-reduced-motion:reduce){.tile.act .pv,.tile .bar b{animation:none}.tile.cas{opacity:1;translate:none;scale:none}}
+@media(max-width:760px){
+#g2{position:relative;display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none;padding:6px calc(50% - 39vw);margin:0 calc(-1*clamp(18px,4vw,48px))}
+#g2::-webkit-scrollbar{display:none}
+#g2 .tile{flex:0 0 78vw;scroll-snap-align:center;transform:scale(var(--s,1));opacity:var(--o,1);transition:border-color .3s}
+#g2 .tile:hover{transform:scale(var(--s,1))}
+#g2.mv .tile{filter:url(#mbx)}
+}
+
 /* services & method */
 .rows .row{display:grid;grid-template-columns:80px 1fr 1.2fr;gap:24px;padding:30px 0;border-top:1px solid var(--line);align-items:baseline;transition:padding .3s,background .3s}
 .rows .row:last-child{border-bottom:1px solid var(--line)}
@@ -212,7 +235,9 @@ var C={
     {title:"Reel 9",url:"https://youtube.com/shorts/z1xH6PCPxNw",thumb:""},{title:"Reel 10",url:"https://youtube.com/shorts/e7LnY9mcnb8",thumb:""}
   ],
   youtube:[
-    {title:"Vidéo 1",url:"",thumb:""},{title:"Vidéo 2",url:"",thumb:""},{title:"Vidéo 3",url:"",thumb:""}
+    {title:"Vidéo 1",url:"https://youtu.be/sbfIm2MbAAg",thumb:""},{title:"Vidéo 2",url:"https://youtu.be/H9f395GfeNg",thumb:""},
+    {title:"Vidéo 3",url:"https://youtu.be/uRapf_2xZW0",thumb:""},{title:"Vidéo 4",url:"https://youtu.be/eqIxc6ytx4U",thumb:""},
+    {title:"Vidéo 5",url:"https://youtu.be/WxJuKEVyYU0",thumb:""},{title:"Vidéo 6",url:"https://youtu.be/cAoXdxbLSAA",thumb:""}
   ],
   motion:[
     {title:"Motion 1",url:"",thumb:""},{title:"Motion 2",url:"",thumb:""},{title:"Motion 3",url:"",thumb:""}
@@ -254,7 +279,34 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeFS()});
 document.addEventListener('click',function(e){if(e.target.closest('.fs .x')){closeFS();return}
 var a=e.target.closest('.tile');if(!a||fs)return;var u=a.getAttribute('data-url');if(!u){e.preventDefault();return}var em=emb(u);if(!em)return;e.preventDefault();
 if(cyl&&mqm.matches&&a.parentNode.id==='g1'&&cyl.go(a))return;
+if(mqm.matches&&a.parentNode.id==='g2'&&parseFloat(a.style.getPropertyValue('--s')||1)<.97){a.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});return}
 openFS(a,em)});
+/* animations des vidéos YouTube : aperçu animé, inclinaison 3D, timecode, cascade, carrousel mobile */
+function ytid(u){var m=(u||'').match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/);return m?m[1]:''}
+function setAct(t,on){if(on&&!t._pv){var id=ytid(t.getAttribute('data-url'));if(id){t._pv=1;var c=t.querySelector('.tc');for(var k=1;k<=3;k++){var im=new Image();im.className='pv';im.alt='';im.src='https://img.youtube.com/vi/'+id+'/hq'+k+'.jpg';im.style.animationDelay=((k-1)*2)+'s';t.insertBefore(im,c)}}}t.classList.toggle('act',!!on)}
+(function(){var hov=matchMedia('(hover:hover)').matches;
+document.querySelectorAll('#g2 .tile,#g3 .tile').forEach(function(t,i){t.classList.add('fx');
+t.insertAdjacentHTML('beforeend','<span class="gl"></span><span class="r2"><i class="rec"></i><span class="ctc">00:00:00</span></span><div class="bar"><b style="animation-delay:-'+((i*1.7)%7).toFixed(1)+'s"></b></div>');
+if(hov)t.classList.add('tilt');if(!mqm.matches)t.classList.add('cas')});
+var cio=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){var t=x.target,i=Array.prototype.indexOf.call(t.parentNode.children,t);t.style.transitionDelay=((i%3)*.14)+'s';t.classList.add('in');cio.unobserve(t);setTimeout(function(){t.style.transitionDelay=''},1400)}})},{threshold:.2});
+document.querySelectorAll('.tile.cas').forEach(function(t){cio.observe(t)});
+document.addEventListener('pointermove',function(e){if(e.pointerType!=='mouse'||!e.target.closest)return;var t=e.target.closest('.tile.tilt');if(!t)return;var r=t.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+t.style.setProperty('--ry',((x-.5)*14).toFixed(2)+'deg');t.style.setProperty('--rx',((.5-y)*10).toFixed(2)+'deg');t.style.setProperty('--gx',(x*100).toFixed(1)+'%');t.style.setProperty('--gy',(y*100).toFixed(1)+'%')});
+document.addEventListener('pointerover',function(e){if(e.pointerType!=='mouse'||!e.target.closest)return;var t=e.target.closest('.tile.fx');if(t&&!t.contains(e.relatedTarget))setAct(t,true)});
+document.addEventListener('pointerout',function(e){if(e.pointerType!=='mouse'||!e.target.closest)return;var t=e.target.closest('.tile.fx');if(t&&!t.contains(e.relatedTarget)){setAct(t,false);t.style.setProperty('--rx','0deg');t.style.setProperty('--ry','0deg')}});
+setInterval(function(){var n=Date.now()/1000,p=function(x){return('0'+x).slice(-2)};document.querySelectorAll('.ctc').forEach(function(e,i){var s=(n+i*7.3)%3600;e.textContent=p(Math.floor(s/60))+':'+p(Math.floor(s)%60)+':'+p(Math.floor((s%1)*24))})},80);
+var aio=new IntersectionObserver(function(en){en.forEach(function(x){if(mqm.matches)setAct(x.target,x.isIntersecting)})},{threshold:.7});
+document.querySelectorAll('#g3 .tile').forEach(function(t){aio.observe(t)});
+var g=document.getElementById('g2'),bl=document.getElementById('mbs'),last=0,v=0,run=false;
+function upd(){if(!mqm.matches)return;var cx=g.scrollLeft+g.clientWidth/2,ts=g.children,best=0,bd=1e9,i;
+for(i=0;i<ts.length;i++){var t=ts[i],d=Math.abs(t.offsetLeft+t.offsetWidth/2-cx)/t.offsetWidth;if(d<bd){bd=d;best=i}
+t.style.setProperty('--s',(1-Math.min(d,1)*.1).toFixed(3));t.style.setProperty('--o',(1-Math.min(d,1)*.5).toFixed(3))}
+for(i=0;i<ts.length;i++)setAct(ts[i],i===best)}
+function tick(){var sl=g.scrollLeft,d=Math.abs(sl-last);last=sl;v=v*.6+d*.4;upd();
+var bx=Math.min(v*.4,10);if(bx>.6){g.classList.add('mv');bl.setAttribute('stdDeviation',bx.toFixed(2)+' 0')}else{g.classList.remove('mv');bl.setAttribute('stdDeviation','0 0')}
+if(v>.05||d>0)requestAnimationFrame(tick);else{run=false;g.classList.remove('mv')}}
+g.addEventListener('scroll',function(){if(!run){run=true;requestAnimationFrame(tick)}},{passive:true});
+window.addEventListener('resize',upd);upd()})();
 /* cylindre 3D : rotation au doigt, inertie, accroche, flou de mouvement */
 (function(){var sc=document.getElementById('scene'),g=document.getElementById('g1'),cnt=document.getElementById('cnt'),hint=document.getElementById('hint'),bl=document.getElementById('mbs'),
 ts=g.children,n=ts.length,M=Math.max(n,6),step=360/M,R=0,ang=0,vel=0,sm=0,prev=0,drag=false,lx=0,sx=0,tgt=null,run=false,dd=false;
