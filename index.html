@@ -34,17 +34,18 @@ nav ul a{font-size:14px;color:var(--mut);transition:color .2s}nav ul a:hover{col
 .tl{height:28px;margin-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start;padding-top:6px;background:repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 24px) top/100% 8px no-repeat}
 .w{display:inline-block;opacity:0;transform:translateY(1.1em) scaleY(1.3);filter:blur(10px);animation:wi 1s cubic-bezier(.22,.8,.2,1) forwards;will-change:transform,filter,opacity}@keyframes wi{55%{filter:blur(3px)}to{opacity:1;transform:none;filter:blur(0)}}
 @media(prefers-reduced-motion:reduce){.w{animation:none;opacity:1;transform:none;filter:none}}
-/* pellicule mobile */
+/* cylindre 3D mobile */
 .hud{display:none}
-#g1{position:relative}
+.tile img{-webkit-user-drag:none}
 @media(max-width:760px){
 .hud{display:flex;justify-content:space-between;align-items:center;margin:-6px 0 12px;color:var(--acc)}
 #hint{transition:opacity .4s;animation:nd 1.4s ease-in-out infinite}
 @keyframes nd{50%{transform:translateX(7px)}}
-#g1{display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none;padding:38px calc(50% - 24vw);margin:0 calc(-1*clamp(18px,4vw,48px));background-color:#111114;background-image:repeating-linear-gradient(90deg,transparent 0 6px,#2c2c32 6px 20px,transparent 20px 30px),repeating-linear-gradient(90deg,transparent 0 6px,#2c2c32 6px 20px,transparent 20px 30px);background-size:100% 11px,100% 11px;background-position:left 0 top 9px,left 0 bottom 9px;background-repeat:no-repeat;background-attachment:local;border-block:1px solid var(--line)}
-#g1::-webkit-scrollbar{display:none}
-#g1 .tile{flex:0 0 48vw;scroll-snap-align:center;transform:scale(var(--s,1));opacity:var(--o,1);transition:border-color .3s;will-change:transform,opacity}
-#g1 .tile:hover{transform:scale(var(--s,1))}
+#scene{--tw:46vw;position:relative;perspective:900px;overflow:hidden;margin:0 calc(-1*clamp(18px,4vw,48px));padding:34px 0;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none;background:radial-gradient(60% 55% at 50% 50%,rgba(255,75,31,.16),transparent 70%),#0f0f12;border-block:1px solid var(--line)}
+#scene:active{cursor:grabbing}
+#g1{display:block;position:relative;margin:0 auto;width:var(--tw);height:calc(var(--tw)*16/9);transform-style:preserve-3d;will-change:transform}
+#g1 .tile{position:absolute;left:0;top:0;width:100%;height:100%;aspect-ratio:auto;backface-visibility:hidden;-webkit-backface-visibility:hidden;opacity:var(--o,1);transition:border-color .3s}
+#g1 .tile:hover{border-color:var(--line)}
 #g1.mv .tile{filter:url(#mbx)}
 }
 /* plein écran */
@@ -132,8 +133,8 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 <h2 class="rv">Mes réalisations</h2>
 
 <div class="cat rv"><h3>Reels Instagram <span class="mono">9:16</span></h3>
-<div class="hud mono"><span id="cnt">01 / 05</span><span id="hint">Glisse →</span></div>
-<div class="grid g916" id="g1"></div></div>
+<div class="hud mono"><span id="cnt">01 / 10</span><span id="hint">Tourne →</span></div>
+<div id="scene"><div class="grid g916" id="g1"></div></div></div>
 <div class="cat rv"><h3>Format YouTube <span class="mono">16:9</span></h3>
 <div class="grid g169" id="g2"></div></div>
 <div class="cat rv"><h3>Motion Design <span class="mono">16:9</span></h3>
@@ -204,8 +205,11 @@ var C={
   // Pour chaque vidéo : url = lien YouTube/Instagram, thumb = image de couverture (facultatif)
   // Pour une vidéo YouTube, la miniature est récupérée automatiquement si thumb est vide.
   reels:[
-    {title:"Reel 1",url:"https://youtu.be/UVP92hkTPMA",thumb:""},{title:"Reel 2",url:"",thumb:""},{title:"Reel 3",url:"",thumb:""},
-    {title:"Reel 4",url:"",thumb:""},{title:"Reel 5",url:"",thumb:""}
+    {title:"Reel 1",url:"https://youtube.com/shorts/sPmJaZpxh-k",thumb:""},{title:"Reel 2",url:"https://youtube.com/shorts/4EOHspu3GjQ",thumb:""},
+    {title:"Reel 3",url:"https://youtube.com/shorts/rKB0QdqiGTY",thumb:""},{title:"Reel 4",url:"https://youtube.com/shorts/fL8BtzjOcOI",thumb:""},
+    {title:"Reel 5",url:"https://youtube.com/shorts/qRFPtoO8pDI",thumb:""},{title:"Reel 6",url:"https://youtube.com/shorts/xbLHiLs-_Kw",thumb:""},
+    {title:"Reel 7",url:"https://youtube.com/shorts/BxnVLyhFGcI",thumb:""},{title:"Reel 8",url:"https://youtube.com/shorts/jHJr0w9IVd8",thumb:""},
+    {title:"Reel 9",url:"https://youtube.com/shorts/z1xH6PCPxNw",thumb:""},{title:"Reel 10",url:"https://youtube.com/shorts/e7LnY9mcnb8",thumb:""}
   ],
   youtube:[
     {title:"Vidéo 1",url:"",thumb:""},{title:"Vidéo 2",url:"",thumb:""},{title:"Vidéo 3",url:"",thumb:""}
@@ -231,7 +235,7 @@ if(m=u.match(/instagram\.com\/(reel|reels|p)\/([\w-]+)/))return{t:'i',s:'https:/
 if(m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/))return{t:'i',s:'https://player.vimeo.com/video/'+m[1]+'?autoplay=1'};
 if(m=u.match(/tiktok\.com\/.*\/video\/(\d+)/))return{t:'i',s:'https://www.tiktok.com/embed/v2/'+m[1]};
 if(/\.(mp4|webm|mov|m4v)(\?|$)/i.test(u))return{t:'v',s:u};return null}
-var mqm=matchMedia('(max-width:760px)'),fs=null;
+var mqm=matchMedia('(max-width:760px)'),fs=null,cyl=null;
 function openFS(a,em){if(fs)return;var r=a.getBoundingClientRect(),img=a.querySelector('img'),o=document.createElement('div');
 o.className='fs';o.style.cssText='left:'+r.left+'px;top:'+r.top+'px;width:'+r.width+'px;height:'+r.height+'px;border-radius:14px';
 o.style.setProperty('--h',(a.style.getPropertyValue('--h')||'0').trim());
@@ -249,19 +253,37 @@ o.addEventListener('transitionend',function(e){if(e.target===o&&e.propertyName==
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeFS()});
 document.addEventListener('click',function(e){if(e.target.closest('.fs .x')){closeFS();return}
 var a=e.target.closest('.tile');if(!a||fs)return;var u=a.getAttribute('data-url');if(!u){e.preventDefault();return}var em=emb(u);if(!em)return;e.preventDefault();
-if(mqm.matches&&a.parentNode.id==='g1'&&parseFloat(a.style.getPropertyValue('--s')||1)<.97){a.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});return}
+if(cyl&&mqm.matches&&a.parentNode.id==='g1'&&cyl.go(a))return;
 openFS(a,em)});
-/* pellicule : mise en avant du centre, compteur, flou de mouvement */
-(function(){var g=document.getElementById('g1'),cnt=document.getElementById('cnt'),hint=document.getElementById('hint'),bl=document.getElementById('mbs'),last=0,v=0,run=false;
-function upd(){var cx=g.scrollLeft+g.clientWidth/2,best=0,bd=1e9,ts=g.children;
-for(var i=0;i<ts.length;i++){var t=ts[i],d=Math.abs(t.offsetLeft+t.offsetWidth/2-cx)/t.offsetWidth;if(d<bd){bd=d;best=i}
-t.style.setProperty('--s',(1-Math.min(d,1)*.14).toFixed(3));t.style.setProperty('--o',(1-Math.min(d,1)*.55).toFixed(3))}
-cnt.textContent=('0'+(best+1)).slice(-2)+' / '+('0'+ts.length).slice(-2)}
-function tick(){var sl=g.scrollLeft,d=Math.abs(sl-last);last=sl;v=v*.6+d*.4;upd();
-var bx=Math.min(v*.4,10);if(bx>.6){g.classList.add('mv');bl.setAttribute('stdDeviation',bx.toFixed(2)+' 0')}else{g.classList.remove('mv');bl.setAttribute('stdDeviation','0 0')}
-if(v>.05||d>0)requestAnimationFrame(tick);else{run=false;g.classList.remove('mv')}}
-g.addEventListener('scroll',function(){if(hint)hint.style.opacity=0;if(!run){run=true;requestAnimationFrame(tick)}},{passive:true});
-window.addEventListener('resize',upd);upd()})();
+/* cylindre 3D : rotation au doigt, inertie, accroche, flou de mouvement */
+(function(){var sc=document.getElementById('scene'),g=document.getElementById('g1'),cnt=document.getElementById('cnt'),hint=document.getElementById('hint'),bl=document.getElementById('mbs'),
+ts=g.children,n=ts.length,M=Math.max(n,6),step=360/M,R=0,ang=0,vel=0,sm=0,prev=0,drag=false,lx=0,sx=0,tgt=null,run=false,dd=false;
+function nm(x){return((x+180)%360+360)%360-180}
+function pad(x){return('0'+x).slice(-2)}
+function layout(){var i;if(!mqm.matches){g.style.transform='';for(i=0;i<n;i++){ts[i].style.transform='';ts[i].style.removeProperty('--o')}g.classList.remove('mv');return}
+R=g.offsetWidth/2/Math.tan(Math.PI/M)*1.1;for(i=0;i<n;i++)ts[i].style.transform='rotateY('+(i*step)+'deg) translateZ('+R+'px)';render()}
+function render(){g.style.transform='translateZ('+(-R)+'px) rotateY('+ang+'deg)';
+for(var i=0;i<n;i++)ts[i].style.setProperty('--o',(1-Math.min(Math.abs(nm(i*step+ang))/100,1)*.65).toFixed(2));
+var f=((Math.round(-ang/step)%M)+M)%M;cnt.textContent=pad(Math.min(f,n-1)+1)+' / '+pad(n)}
+function start(){if(!run){run=true;requestAnimationFrame(tick)}}
+function rest(){return tgt!=null?tgt:Math.round(ang/step)*step}
+function tick(){if(!mqm.matches){run=false;return}
+if(!drag){if(Math.abs(vel)>.2){ang+=vel;vel*=.94;tgt=null}else{vel=0;var t=rest();ang+=(t-ang)*.13;if(Math.abs(t-ang)<.03){ang=t;tgt=null}}}
+var sp=Math.abs(ang-prev);prev=ang;sm=sm*.6+sp*.4;var bx=Math.min(sm*.9,9);
+if(bx>.6){g.classList.add('mv');bl.setAttribute('stdDeviation',bx.toFixed(2)+' 0')}else{g.classList.remove('mv');bl.setAttribute('stdDeviation','0 0')}
+render();
+if(drag||Math.abs(vel)>.2||Math.abs(rest()-ang)>.03||sm>.05)requestAnimationFrame(tick);else{run=false;g.classList.remove('mv')}}
+sc.addEventListener('pointerdown',function(e){if(!mqm.matches)return;drag=true;dd=false;lx=sx=e.clientX;vel=0;tgt=null;start()});
+sc.addEventListener('pointermove',function(e){if(!drag)return;var dx=e.clientX-lx;lx=e.clientX;
+if(!dd&&Math.abs(e.clientX-sx)>6){dd=true;try{sc.setPointerCapture(e.pointerId)}catch(_){}if(hint)hint.style.opacity=0}
+if(dd){ang+=dx*.3;vel=vel*.5+dx*.15}});
+function up(){if(!drag)return;drag=false;if(!dd)vel=0;vel=Math.max(-16,Math.min(16,vel))}
+sc.addEventListener('pointerup',up);sc.addEventListener('pointercancel',up);
+sc.addEventListener('click',function(e){if(dd){e.stopImmediatePropagation();e.preventDefault();dd=false}},true);
+sc.addEventListener('dragstart',function(e){e.preventDefault()});
+cyl={go:function(a){var i=Array.prototype.indexOf.call(ts,a),r=nm(i*step+ang);if(Math.abs(r)<4)return false;vel=0;tgt=ang-r;start();return true}};
+window.addEventListener('resize',layout);layout();
+if('IntersectionObserver'in window){var io2=new IntersectionObserver(function(en){if(en[0].isIntersecting&&mqm.matches){io2.disconnect();ang=-110;tgt=0;prev=ang;start()}},{threshold:.5});io2.observe(sc)}})();
 (function(){var p=document.querySelector('.hero p.lead');if(!p)return;var t=p.textContent.trim();p.setAttribute('aria-label',t);
 p.innerHTML=t.split(/\s+/).map(function(w,i){return '<span class="w" aria-hidden="true" style="animation-delay:'+(0.3+i*0.08).toFixed(2)+'s">'+w+'</span>'}).join(' ')})();
 var t0=Date.now(),el=document.getElementById('tc');
