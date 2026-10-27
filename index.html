@@ -56,6 +56,12 @@ nav ul a{font-size:14px;color:var(--mut);transition:color .2s}nav ul a:hover{col
 .fs .x{position:absolute;z-index:5;top:calc(env(safe-area-inset-top,0px) + 14px);right:14px;width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:rgba(0,0,0,.45);backdrop-filter:blur(8px);color:#fff;font-size:18px;cursor:pointer;transition:opacity .3s}
 .fs.out .x{opacity:0}
 @media(prefers-reduced-motion:reduce){.fs{transition-duration:.01s}#hint{animation:none}}
+/* réglages PC uniquement */
+@media(min-width:761px){
+.hero::before{background-position:var(--pc-img-pos,var(--hero-pos));background-size:var(--pc-img-size,cover)}
+.big{font-size:var(--pc-name-size,clamp(72px,19vw,300px));translate:var(--pc-name-x,0px) var(--pc-name-y,0px)}
+.hero p.lead{font-size:var(--pc-text-size,clamp(17px,1.6vw,21px));max-width:var(--pc-text-w,520px);translate:var(--pc-text-x,0px) var(--pc-text-y,0px)}
+}
 /* marquee */
 .mq{border-block:1px solid var(--line);overflow:hidden;padding:18px 0;white-space:nowrap}
 .mq div{display:inline-block;animation:m 28s linear infinite;font-size:clamp(28px,5vw,64px);font-weight:700;letter-spacing:-.03em}
@@ -215,6 +221,17 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 var C={
   heroImage:"acceuil.jpg",            // image d'accueil, ex: "images/accueil.jpg" (vide = fond dégradé)
   heroPosition:"center",    // position de l'image : "center", "center top", "center bottom", "left center", "right center" ou "50% 30%"
+  // ----- RÉGLAGES PC UNIQUEMENT (le téléphone n'est jamais modifié) -----
+  pcImagePosition:"center 30%",       // position de l'image sur PC, ex: "center 30%", "left center" (vide = comme heroPosition)
+  pcImageSize:"",           // zoom de l'image sur PC, ex: "cover" (par défaut), "120%", "150%"
+  pcNameSize:"",            // taille du nom « ADLENE. » sur PC, ex: "14vw" ou "220px" (vide = taille actuelle)
+  pcNameX:"0px",            // déplacer le nom : positif = vers la droite, négatif = vers la gauche (ex: "80px")
+  pcNameY:"0px",            // positif = vers le bas, négatif = vers le haut (ex: "-40px")
+  pcTextSize:"",            // taille de la description sur PC, ex: "24px"
+  pcTextWidth:"",           // largeur du bloc de description sur PC, ex: "640px"
+  pcTextX:"0px",            // déplacer la description : positif = droite, négatif = gauche
+  pcTextY:"0px",            // positif = bas, négatif = haut
+  // ------------------------------------------------------------------------
   heroImageOpacity:1,       // 0 à 1 : visibilité de l'image
   heroOverlay:0.2,          // 0 à 1 : voile sombre sur l'image (plus haut = image plus sombre)
   titleOpacity:0.5,          // 0 à 1 : opacité du grand titre « ADLENE. »
@@ -253,6 +270,7 @@ h+='<a class="tile '+cls+'" style="--h:'+((i*47+hue)%360)+'" data-url="'+esc(v.u
 document.getElementById(id).innerHTML=h}
 mk('g1',C.reels,'r916','Reel',10);mk('g2',C.youtube,'r169','YouTube',200);mk('g3',C.motion,'r169','Motion',280);
 var rs=document.documentElement.style;if(C.heroImage)rs.setProperty('--hero-img','url("'+C.heroImage+'")');rs.setProperty('--hero-pos',C.heroPosition||'center');rs.setProperty('--hero-img-opacity',C.heroImageOpacity);rs.setProperty('--hero-overlay',C.heroOverlay);rs.setProperty('--title-opacity',C.titleOpacity);rs.setProperty('--lead-opacity',C.textOpacity);
+[['--pc-img-pos',C.pcImagePosition],['--pc-img-size',C.pcImageSize],['--pc-name-size',C.pcNameSize],['--pc-name-x',C.pcNameX],['--pc-name-y',C.pcNameY],['--pc-text-size',C.pcTextSize],['--pc-text-w',C.pcTextWidth],['--pc-text-x',C.pcTextX],['--pc-text-y',C.pcTextY]].forEach(function(x){if(x[1])rs.setProperty(x[0],x[1])});
 if(C.email)document.getElementById('mail').href='mailto:'+C.email+'?subject=Projet%20vid%C3%A9o';
 if(C.logo)document.getElementById('logo').innerHTML='<img src="'+esc(C.logo)+'" alt="Adlene" style="height:30px;display:block">';
 document.getElementById('soc').innerHTML=C.socials.filter(function(x){return x[1]}).map(function(x){return '<a class="btn" target="_blank" rel="noopener" href="'+esc(x[1])+'">'+esc(x[0])+' ↗</a>'}).join('');
